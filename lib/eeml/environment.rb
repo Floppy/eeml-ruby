@@ -1,4 +1,6 @@
+require 'rubygems'
 require 'builder'
+require 'rexml/document'
 
 module EEML
 
@@ -9,6 +11,20 @@ module EEML
     # Create new Environment object
     def initialize
       @data_items = []
+    end
+
+    # Create from an EEML document
+    def self.from_eeml(eeml)
+      # Parse EEML
+      doc = REXML::Document.new(eeml)
+      # Create environment object
+      env = Environment.new
+      # Read data items
+      REXML::XPath.each(doc, "/eeml/environment/data") do |node|
+        env << EEML::Data.new(node.elements['value'].text.to_f)
+      end
+      # Done
+      return env
     end
 
     # Convert to EEML

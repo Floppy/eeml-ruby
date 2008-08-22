@@ -59,4 +59,15 @@ describe EEML::Environment do
 
   end
   
+  describe "being created from XML" do
+    
+    it "parses the 'minimal' EEML example document" do
+      eeml = '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
+      env = EEML::Environment.from_eeml(eeml)
+      env.size.should be(1)
+      env[0].value.should be_close(36.2, 1e-9)
+    end
+
+  end
+
 end
