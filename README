@@ -1,0 +1,18 @@
+== EEML-Ruby
+
+A Ruby wrapper around the Extended Environments Markup Language
+(http://www.eeml.org)
+
+Licensed under the MIT license (See COPYING file for details)
+
+Author: James Smith (james@floppy.org.uk / http://www.floppy.org.uk)
+
+Homepage: http://github.com/Floppy/eeml-ruby
+
+== INSTALLATION
+
+1) Enable gems from github, if you haven't already done so (rubygems >= 1.2): 
+    > sudo gem sources -a http://gems.github.com
+
+2) Install gem
+    > sudo gem install Floppy-eeml
