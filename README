@@ -16,3 +16,14 @@ Homepage: http://github.com/Floppy/eeml-ruby
 
 2) Install gem
     > sudo gem install Floppy-eeml
+
+== STATUS
+
+The code can current create and parse EEML at a level equivalent to the
+"minimal" EEML example at http://eeml.org/xml/005/minimal.xml.
+
+To parse EEML: call EEML::Environment#from_eeml(your_eeml_string), and you will
+get back an EEML::Environment object containing a number of EEML::Data objects.
+
+To create EEML: create an EEML::Environment object, add one or more EEML::Data
+objects to it, and call EEML::Environment#to_eeml.
