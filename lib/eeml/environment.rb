@@ -1,3 +1,5 @@
+require 'builder'
+
 module EEML
 
   # An EEML environment object. Can contain a number of EEML::Data objects, as
@@ -11,7 +13,22 @@ module EEML
 
     # Convert to EEML
     def to_eeml
-      raise EEML::NoData.new('EEML requires at least one data item')
+      # Check that we have some data items
+      raise EEML::NoData.new('EEML requires at least one data item') if size < 1
+      # Create EEML
+      eeml = Builder::XmlMarkup.new
+      eeml.instruct!
+      eeml.eeml(:xmlns => "http://www.eeml.org/xsd/005",
+                :'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+                :'xsi:schemaLocation' => "http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd") do
+        eeml.environment do
+          @data_items.each_index do |i|
+            eeml.data(:id => i) do
+              eeml.value @data_items[i].value
+            end
+          end
+        end
+      end
     end
 
     # Add an EEML::Data object to the environment
