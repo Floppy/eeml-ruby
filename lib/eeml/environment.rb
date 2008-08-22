@@ -37,9 +37,14 @@ module EEML
       @data_items << value
     end
 
-    # The number of EEML::Data objets in the environment
+    # The number of EEML::Data objects in the environment
     def size
       @data_items.size
+    end
+
+    # Access contained EEML::Data objects
+    def [](index)
+      @data_items[index]
     end
 
   end
