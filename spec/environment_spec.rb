@@ -19,4 +19,26 @@ describe EEML::Environment do
 
   end
 
+  describe "after creation" do
+    
+    before(:each) do
+      @env = EEML::Environment.new
+    end
+
+    it "can have a data item added to it" do
+      lambda {
+        @env << EEML::Data.new(36.2)
+      }.should_not raise_error
+      @env.size.should be(1)
+    end
+
+    it "can only have EEML::Data items added to it" do
+      lambda {
+        @env << 36.2
+      }.should raise_error(TypeError, "Only EEML::Data objects can be added to EEML::Environment objects")
+      @env.size.should be(0)
+    end
+    
+  end
+
 end
