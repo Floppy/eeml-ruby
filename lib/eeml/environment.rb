@@ -37,10 +37,29 @@ module EEML
       eeml.eeml(:xmlns => "http://www.eeml.org/xsd/005",
                 :'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
                 :'xsi:schemaLocation' => "http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd") do
-        eeml.environment do
+        eeml.environment do |env|
+          env.title @title if @title
+          env.feed @feed if @feed
+          env.status @status.to_s if @status
+          env.description @description if @description
+          env.icon @icon if @icon
+          env.website @website if @website
+          env.email @email if @email
           @data_items.each_index do |i|
-            eeml.data(:id => i) do
-              eeml.value @data_items[i].value
+            env.data(:id => i) do |data|
+              @data_items[i].tags.each do |tag|
+                data.tag tag
+              end              
+              value_options = {}
+              value_options[:maxValue] = @data_items[i].max_value if @data_items[i].max_value
+              value_options[:minValue] = @data_items[i].min_value if @data_items[i].min_value
+              data.value @data_items[i].value, value_options
+              if @data_items[i].unit
+                unit_options = {}
+                unit_options[:symbol] = @data_items[i].unit.symbol if @data_items[i].unit.symbol
+                unit_options[:type] = @data_items[i].unit.type if @data_items[i].unit.type
+                data.unit @data_items[i].unit.name, unit_options
+              end
             end
           end
         end
