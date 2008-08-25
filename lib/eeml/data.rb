@@ -22,6 +22,17 @@ module EEML
     # Maximum value
     attr_accessor :max_value
 
+    # Unit of measurement
+    def unit
+      @unit
+    end
+
+    # Unit of measurement - must be a EEML::Unit object
+    def unit=(unit_val)
+      raise TypeError.new("unit must be an EEML::Unit") unless unit_val.is_a?(EEML::Unit)
+      @unit = unit_val
+    end
+
   end
 
 end

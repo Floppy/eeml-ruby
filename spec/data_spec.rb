@@ -53,6 +53,18 @@ describe EEML::Data do
       @data.max_value.should == val
     end
 
+    it "can have units" do
+      unit = EEML::Unit.new("Celsius", :symbol => 'C', :type => :derivedSI)
+      @data.unit = unit
+      @data.unit.should == unit
+    end
+
+    it "can't have units which aren't EEML::Unit objects" do
+      lambda {
+        @data.unit = "cheese"
+      }.should raise_error(TypeError, "unit must be an EEML::Unit")
+    end
+
   end
   
 end
