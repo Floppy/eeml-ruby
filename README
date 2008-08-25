@@ -27,3 +27,9 @@ get back an EEML::Environment object containing a number of EEML::Data objects.
 
 To create EEML: create an EEML::Environment object, add one or more EEML::Data
 objects to it, and call EEML::Environment#to_eeml.
+
+== EXAMPLES
+
+The file examples/simple_server.rb contains a simple WEBrick server which serves
+an EEML document. This allows a site like Pachube (http://www.pachube.com) to
+get EEML data from your system.
