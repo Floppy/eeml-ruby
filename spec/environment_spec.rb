@@ -38,7 +38,59 @@ describe EEML::Environment do
       }.should raise_error(TypeError, "Only EEML::Data objects can be added to EEML::Environment objects")
       @env.size.should be(0)
     end
-    
+
+    it "can have a title" do
+      title = "A Room Somewhere"
+      @env.title = title
+      @env.title.should == title
+    end
+
+    it "can have a feed URL" do
+      feed = "http://www.pachube.com/feeds/1.xml"
+      @env.feed = feed
+      @env.feed.should == feed
+    end
+
+    it "can have a status of 'frozen' or 'live'" do
+      status = :frozen
+      @env.status = status
+      @env.status.should == status
+      status = :live
+      @env.status = status
+      @env.status.should == status
+    end
+
+    it "rejects invalid status settings" do
+      status = 'gibber'
+      lambda {
+        @env.status = status
+      }.should raise_error(ArgumentError, "Status must be :frozen or :live")
+    end
+
+    it "can have a description" do
+      description = "This is a room somewhere"
+      @env.description = description
+      @env.description.should == description
+    end
+
+    it "can have an icon URL" do
+      icon = "http://www.roomsomewhere/icon.png"
+      @env.icon = icon
+      @env.icon.should == icon
+    end
+
+    it "can have a website URL" do
+      website = "http://www.roomsomewhere/"
+      @env.website = website
+      @env.website.should == website
+    end
+
+    it "can have an associated email address" do
+      email = "myemail@roomsomewhere"
+      @env.email = email
+      @env.email.should == email
+    end
+
   end
 
   describe "with a single data item" do
@@ -70,4 +122,18 @@ describe EEML::Environment do
 
   end
 
+#  describe "with everything set" do
+#
+#    before(:each) do
+#      @env = EEML::Environment.new
+#      @data = EEML::Data.new(36.2)
+#      @env << @data
+#    end
+#
+#    it "generates the 'complete' EEML example document" do
+#      @env.to_eeml.should == '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns="http://www.eeml.org/xsd/005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd" version="5"><environment updated="2007-05-04T18:13:51.0Z" creator="http://www.haque.co.uk" id="1"><title>A Room Somewhere</title><feed>http://www.pachube.com/feeds/1.xml</feed><status>frozen</status><description>This is a room somewhere</description><icon>http://www.roomsomewhere/icon.png</icon><website>http://www.roomsomewhere/</website><email>myemail@roomsomewhere</email><location exposure="indoor" domain="physical" disposition="fixed"><name>My Room</name><lat>32.4</lat><lon>22.7</lon><ele>0.2</ele></location><data id="0"><tag>temperature</tag><value minValue="23.0" maxValue="48.0">36.2</value><unit symbol="C" type="derivedSI">Celsius</unit></data><data id="1"><tag>blush</tag><tag>redness</tag><tag>embarrassment</tag><value minValue="0.0" maxValue="100.0">84.0</value><unit type="contextDependentUnits">blushesPerHour</unit></data><data id="2"><tag>length</tag><tag>distance</tag><tag>extension</tag><value minValue="0.0">12.3</value><unit symbol="m" type="basicSI">meter</unit></data></environment></eeml>'
+#    end
+#
+#  end
+#
 end

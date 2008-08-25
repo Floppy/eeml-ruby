@@ -63,6 +63,34 @@ module EEML
       @data_items[index]
     end
 
+    # The title for this EEML feed
+    attr_accessor :title
+
+    # The URL for this EEML feed
+    attr_accessor :feed
+
+    # The status of this EEML feed - can be :frozen or :live
+    def status
+      @status
+    end
+    # The status of this EEML feed - can be :frozen or :live
+    def status=(val)
+      raise ArgumentError.new("Status must be :frozen or :live") unless [:frozen, :live].include?(val)
+      @status = val
+    end
+
+    # A description of this EEML feed
+    attr_accessor :description
+
+    # The URL of an icon for this feed
+    attr_accessor :icon
+    
+    # The URL of a website related to this feed
+    attr_accessor :website
+
+    # The email address of the feed creator
+    attr_accessor :email
+
   end
 
 end
