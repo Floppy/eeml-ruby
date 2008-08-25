@@ -6,21 +6,21 @@ describe EEML::Data do
 
     it "can be created with just a value" do
       lambda {
-        env = EEML::Data.new(36.2)
+        data = EEML::Data.new(36.2)
       }.should_not raise_error
     end
 
     it "allows setting of the value" do
-      env = EEML::Data.new(36.2)
+      data = EEML::Data.new(36.2)
       val = 42.7
-      env.value = val
-      env.value.should be(val)
+      data.value = val
+      data.value.should be(val)
     end
 
     it "provides access to value" do
       val = 36.2
-      env = EEML::Data.new(val)
-      env.value.should be(val)
+      data = EEML::Data.new(val)
+      data.value.should be(val)
     end
 
   end
