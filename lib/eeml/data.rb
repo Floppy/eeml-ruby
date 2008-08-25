@@ -7,10 +7,20 @@ module EEML
     # Create a new EEML::Data item.
     def initialize(value)
       @value = value
+      @tags = []
     end
 
     # Data value
     attr_accessor :value
+
+    # Tag array
+    attr_accessor :tags
+
+    # Minimum value
+    attr_accessor :min_value
+
+    # Maximum value
+    attr_accessor :max_value
 
   end
 
