@@ -75,7 +75,7 @@ module EEML
     end
     # The status of this EEML feed - can be :frozen or :live
     def status=(val)
-      raise ArgumentError.new("Status must be :frozen or :live") unless [:frozen, :live].include?(val)
+      raise ArgumentError.new("Status must be :frozen or :live") unless [nil, :frozen, :live].include?(val)
       @status = val
     end
 
