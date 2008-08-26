@@ -29,7 +29,9 @@ module EEML
 
     # Unit of measurement - must be a EEML::Unit object
     def unit=(unit_val)
-      raise TypeError.new("unit must be an EEML::Unit") unless unit_val.is_a?(EEML::Unit)
+      unless unit_val.is_a?(EEML::Unit)
+        raise TypeError.new("unit must be an EEML::Unit") 
+      end
       @unit = unit_val
     end
 

@@ -46,7 +46,9 @@ module EEML
     
     # Set the latitude of the location
     def lat=(latitude)
-      raise ArgumentError.new("Latitude must be between -90 and +90") if latitude && (latitude < -90 || latitude > 90)
+      if latitude && (latitude < -90 || latitude > 90)
+        raise ArgumentError.new("Latitude must be between -90 and +90") 
+      end
       @lat = latitude
     end
     
@@ -55,7 +57,9 @@ module EEML
     
     # Set the longitude of the location
     def lng=(longitude)      
-      raise ArgumentError.new("Longitude must be between -180 and +180") if longitude && (longitude < -180 || longitude > 180)
+      if longitude && (longitude < -180 || longitude > 180)
+        raise ArgumentError.new("Longitude must be between -180 and +180") 
+      end
       @lng = longitude
     end
 
