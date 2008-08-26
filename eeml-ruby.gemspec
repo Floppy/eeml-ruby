@@ -8,6 +8,6 @@ Gem::Specification.new do |s|
   s.has_rdoc = true
   s.authors = ["James Smith"]
   s.files = ["README", "COPYING"]
-  s.files += ["lib/eeml.rb", "lib/eeml/environment.rb", "lib/eeml/data.rb", "lib/eeml/exceptions.rb", "lib/eeml/location/rb", "lib/eeml/unit.rb"]
+  s.files += ["lib/eeml.rb", "lib/eeml/environment.rb", "lib/eeml/data.rb", "lib/eeml/exceptions.rb", "lib/eeml/location.rb", "lib/eeml/unit.rb"]
   s.files += ["examples/simple_server.rb"]
 end
