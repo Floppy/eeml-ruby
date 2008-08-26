@@ -27,40 +27,45 @@ module EEML
       return env
     end
 
-    # Convert to EEML
-    def to_eeml
-      # Check that we have some data items
-      if size < 1
-        raise EEML::NoData.new('EEML requires at least one data item')
-      end
-      # Create EEML
-      eeml = Builder::XmlMarkup.new
-      eeml.instruct!
-      eeml.eeml(:xmlns => "http://www.eeml.org/xsd/005",
-                :'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
-                :'xsi:schemaLocation' => "http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd") do
-        eeml.environment do |env|
-          env.title @title if @title
-          env.feed @feed if @feed
-          env.status @status.to_s if @status
-          env.description @description if @description
-          env.icon @icon if @icon
-          env.website @website if @website
-          env.email @email if @email
-          @data_items.each_index do |i|
-            env.data(:id => i) do |data|
-              @data_items[i].tags.each do |tag|
-                data.tag tag
-              end              
-              value_options = {}
-              value_options[:maxValue] = @data_items[i].max_value if @data_items[i].max_value
-              value_options[:minValue] = @data_items[i].min_value if @data_items[i].min_value
-              data.value @data_items[i].value, value_options
-              if @data_items[i].unit
-                unit_options = {}
-                unit_options[:symbol] = @data_items[i].unit.symbol if @data_items[i].unit.symbol
-                unit_options[:type] = @data_items[i].unit.type if @data_items[i].unit.type
-                data.unit @data_items[i].unit.name, unit_options
+    # Convert to EEML. Optional parameter describes the version of EEML to generate.
+    # Default (and currently only version implemented) is version 5.
+    def to_eeml(version = nil)
+      if version.nil? || version == 5
+        # Check that we have some data items
+        if size < 1
+          raise EEML::NoData.new('EEML requires at least one data item')
+        end
+        # Create EEML
+        eeml = Builder::XmlMarkup.new
+        eeml.instruct!
+        eeml_options = {:xmlns => "http://www.eeml.org/xsd/005",
+                        :'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+                        :'xsi:schemaLocation' => "http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"}
+        eeml_options[:version] = version if version
+        eeml.eeml(eeml_options) do
+          eeml.environment do |env|
+            env.title @title if @title
+            env.feed @feed if @feed
+            env.status @status.to_s if @status
+            env.description @description if @description
+            env.icon @icon if @icon
+            env.website @website if @website
+            env.email @email if @email
+            @data_items.each_index do |i|
+              env.data(:id => i) do |data|
+                @data_items[i].tags.each do |tag|
+                  data.tag tag
+                end
+                value_options = {}
+                value_options[:maxValue] = @data_items[i].max_value if @data_items[i].max_value
+                value_options[:minValue] = @data_items[i].min_value if @data_items[i].min_value
+                data.value @data_items[i].value, value_options
+                if @data_items[i].unit
+                  unit_options = {}
+                  unit_options[:symbol] = @data_items[i].unit.symbol if @data_items[i].unit.symbol
+                  unit_options[:type] = @data_items[i].unit.type if @data_items[i].unit.type
+                  data.unit @data_items[i].unit.name, unit_options
+                end
               end
             end
           end
@@ -124,6 +129,28 @@ module EEML
       end
       @location = loc
     end
+
+    # Last updated time
+    attr_reader :updated_at
+
+    # Set last updated time
+    def updated_at=(time)
+      unless time.is_a?(Time)
+        raise TypeError.new('updated_at must be a Time object')
+      end
+      @updated_at = time
+    end
+
+    # Set last updated time
+    def set_updated!
+      @updated_at = Time.now
+    end
+
+    # A string showing the creator of this environment object
+    attr_accessor :creator
+
+    # The ID of the environment object
+    attr_accessor :id
 
   end
 

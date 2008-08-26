@@ -98,10 +98,43 @@ describe EEML::Environment do
       @env.location.should == location
     end
 
-    it "can't have an invalid object as a location" do
+    it "cannot have an invalid object as a location" do
       lambda {
         @env.location = "cheese"
       }.should raise_error(TypeError, "loc must be an EEML::Location")
+    end
+
+    it "can have an updated_at time" do
+      time = Time.now
+      @env.updated_at = time
+      @env.updated_at.should == time
+    end
+
+    it "allows client code to conveniently set updated_at to now" do
+      t1 = Time.now
+      @env.set_updated!
+      t2 = Time.now
+      @env.updated_at > t1
+      @env.updated_at < t2
+    end
+
+    it "cannot have anything other than a Time object" do
+      time = "cheese"
+      lambda {
+        @env.updated_at = time
+      }.should raise_error(TypeError, "updated_at must be a Time object")
+    end
+
+    it "can have a creator string" do
+      creator = "http://www.haque.co.uk"
+      @env.creator = creator
+      @env.creator.should == creator
+    end
+
+    it "can have an id" do
+      id = 1
+      @env.id = id
+      @env.id.should == id
     end
 
   end
