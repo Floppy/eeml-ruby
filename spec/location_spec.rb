@@ -20,13 +20,13 @@ describe EEML::Location do
                              :disposition => :fixed,
                              :name => "My Room",
                              :lat => 32.4,
-                             :lng => 22.7,
+                             :lon => 22.7,
                              :ele => 0.2)
     loc.exposure.should == :indoor
     loc.disposition.should == :fixed
     loc.name.should == "My Room"
     loc.lat.should == 32.4
-    loc.lng.should == 22.7
+    loc.lon.should == 22.7
     loc.ele.should == 0.2
   end
   
@@ -108,19 +108,19 @@ describe EEML::Location do
     end
 
     it "can have a longitude" do
-      lng = 22.7
-      @loc.lng = lng
-      @loc.lng.should == lng
+      lon = 22.7
+      @loc.lon = lon
+      @loc.lon.should == lon
     end
 
     it "cannot have a longitude outside -180..180" do
-      lng = 180.1
+      lon = 180.1
       lambda {
-        @loc.lng = lng
+        @loc.lon = lon
       }.should raise_error(ArgumentError, "Longitude must be between -180 and +180")
-      lng = -180.1
+      lon = -180.1
       lambda {
-        @loc.lng = lng
+        @loc.lon = lon
       }.should raise_error(ArgumentError, "Longitude must be between -180 and +180")
     end
 

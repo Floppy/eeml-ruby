@@ -10,7 +10,7 @@ module EEML
       set_disposition(options[:disposition])
       @name = options[:name]
       self.lat = options[:lat]
-      self.lng = options[:lng]
+      self.lon = options[:lon]
       @ele = options[:ele]
     end
 
@@ -53,14 +53,14 @@ module EEML
     end
     
     # Longitude of location
-    attr_reader :lng
+    attr_reader :lon
     
     # Set the longitude of the location
-    def lng=(longitude)      
+    def lon=(longitude)      
       if longitude && (longitude < -180 || longitude > 180)
         raise ArgumentError.new("Longitude must be between -180 and +180") 
       end
-      @lng = longitude
+      @lon = longitude
     end
 
     # Elevation of location
