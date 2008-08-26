@@ -148,7 +148,7 @@ describe EEML::Environment do
     end
 
     it "generates the 'minimal' EEML example document" do
-      @env.to_eeml.should == '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
+      @env.to_eeml.should == '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
     end
 
     it "should allow access to the data item" do
@@ -160,7 +160,7 @@ describe EEML::Environment do
   describe "being created from XML" do
     
     it "parses the 'minimal' EEML example document" do
-      eeml = '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
+      eeml = '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
       env = EEML::Environment.from_eeml(eeml)
       env.size.should be(1)
       env[0].value.should be_close(36.2, 1e-9)
@@ -179,6 +179,10 @@ describe EEML::Environment do
       @env.icon = "http://www.roomsomewhere/icon.png"
       @env.website = "http://www.roomsomewhere/"
       @env.email = "myemail@roomsomewhere"
+      @env.updated_at = Time.utc(2007, 05, 04, 18, 13, 51)
+      @env.creator = "http://www.haque.co.uk"
+      @env.id = 1
+      @env.location = EEML::Location.new(:physical, :exposure => :indoor, :disposition => :fixed, :name => "My Room", :lat => 32.4, :lon => 22.7, :ele => 0.2)
       @data0 = EEML::Data.new(36.2)
       @data0.tags << "temperature"
       @data0.max_value = 48.0
@@ -189,8 +193,8 @@ describe EEML::Environment do
       @data1.tags << "blush"
       @data1.tags << "redness"
       @data1.tags << "embarrassment"      
-      @data1.max_value = 0.0
-      @data1.min_value = 100.0
+      @data1.max_value = 100.0
+      @data1.min_value = 0.0
       @data1.unit = EEML::Unit.new("blushesPerHour", :type => :contextDependentUnits)
       @env << @data1
       @data2 = EEML::Data.new(12.3)
@@ -203,7 +207,7 @@ describe EEML::Environment do
     end
 
     it "generates the 'complete' EEML example document" do
-      @env.to_eeml.should == '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns="http://www.eeml.org/xsd/005" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd" version="5"><environment updated="2007-05-04T18:13:51.0Z" creator="http://www.haque.co.uk" id="1"><title>A Room Somewhere</title><feed>http://www.pachube.com/feeds/1.xml</feed><status>frozen</status><description>This is a room somewhere</description><icon>http://www.roomsomewhere/icon.png</icon><website>http://www.roomsomewhere/</website><email>myemail@roomsomewhere</email><location exposure="indoor" domain="physical" disposition="fixed"><name>My Room</name><lat>32.4</lat><lon>22.7</lon><ele>0.2</ele></location><data id="0"><tag>temperature</tag><value minValue="23.0" maxValue="48.0">36.2</value><unit symbol="C" type="derivedSI">Celsius</unit></data><data id="1"><tag>blush</tag><tag>redness</tag><tag>embarrassment</tag><value minValue="0.0" maxValue="100.0">84.0</value><unit type="contextDependentUnits">blushesPerHour</unit></data><data id="2"><tag>length</tag><tag>distance</tag><tag>extension</tag><value minValue="0.0">12.3</value><unit symbol="m" type="basicSI">meter</unit></data></environment></eeml>'
+      @env.to_eeml(5).should == '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"><environment updated="2007-05-04T18:13:51Z" creator="http://www.haque.co.uk" id="1"><title>A Room Somewhere</title><feed>http://www.pachube.com/feeds/1.xml</feed><status>frozen</status><description>This is a room somewhere</description><icon>http://www.roomsomewhere/icon.png</icon><website>http://www.roomsomewhere/</website><email>myemail@roomsomewhere</email><location domain="physical" exposure="indoor" disposition="fixed"><name>My Room</name><lat>32.4</lat><lon>22.7</lon><ele>0.2</ele></location><data id="0"><tag>temperature</tag><value minValue="23.0" maxValue="48.0">36.2</value><unit type="derivedSI" symbol="C">Celsius</unit></data><data id="1"><tag>blush</tag><tag>redness</tag><tag>embarrassment</tag><value minValue="0.0" maxValue="100.0">84.0</value><unit type="contextDependentUnits">blushesPerHour</unit></data><data id="2"><tag>length</tag><tag>distance</tag><tag>extension</tag><value minValue="0.0">12.3</value><unit type="basicSI" symbol="m">meter</unit></data></environment></eeml>'
     end
 
   end

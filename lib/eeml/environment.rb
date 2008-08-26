@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'builder'
 require 'rexml/document'
+require 'time'
 
 module EEML
 
@@ -43,7 +44,11 @@ module EEML
                         :'xsi:schemaLocation' => "http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"}
         eeml_options[:version] = version if version
         eeml.eeml(eeml_options) do
-          eeml.environment do |env|
+          env_options = {}
+          env_options[:updated] = @updated_at.xmlschema if @updated_at
+          env_options[:creator] = @creator if @creator
+          env_options[:id] = @id if @id
+          eeml.environment(env_options) do |env|
             env.title @title if @title
             env.feed @feed if @feed
             env.status @status.to_s if @status
@@ -51,6 +56,18 @@ module EEML
             env.icon @icon if @icon
             env.website @website if @website
             env.email @email if @email
+            if @location
+              loc_options = {}
+              loc_options[:domain] = @location.domain
+              loc_options[:exposure] = @location.exposure if @location.exposure
+              loc_options[:disposition] = @location.disposition if @location.disposition
+              env.location(loc_options) do |loc|
+                loc.name @location.name if @location.name
+                loc.lat @location.lat if @location.lat
+                loc.lon @location.lon if @location.lon
+                loc.ele @location.ele if @location.ele
+              end
+            end
             @data_items.each_index do |i|
               env.data(:id => i) do |data|
                 @data_items[i].tags.each do |tag|
