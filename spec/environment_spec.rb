@@ -91,6 +91,19 @@ describe EEML::Environment do
       @env.email.should == email
     end
 
+    it "can have a location" do
+      location = EEML::Location.new(:physical, :exposure=>:indoor, :disposition=>:fixed,
+                                    :name=>"My Room", :lat=>32.4, :lon=>22.7, :ele=>0.2)
+      @env.location = location
+      @env.location.should == location
+    end
+
+    it "can't have an invalid object as a location" do
+      lambda {
+        @env.location = "cheese"
+      }.should raise_error(TypeError, "loc must be an EEML::Location")
+    end
+
   end
 
   describe "with a single data item" do

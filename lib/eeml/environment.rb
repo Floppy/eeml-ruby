@@ -30,7 +30,9 @@ module EEML
     # Convert to EEML
     def to_eeml
       # Check that we have some data items
-      raise EEML::NoData.new('EEML requires at least one data item') if size < 1
+      if size < 1
+        raise EEML::NoData.new('EEML requires at least one data item')
+      end
       # Create EEML
       eeml = Builder::XmlMarkup.new
       eeml.instruct!
@@ -94,7 +96,9 @@ module EEML
     end
     # The status of this EEML feed - can be :frozen or :live
     def status=(val)
-      raise ArgumentError.new("Status must be :frozen or :live") unless [nil, :frozen, :live].include?(val)
+      unless [nil, :frozen, :live].include?(val)
+        raise ArgumentError.new("Status must be :frozen or :live") 
+      end
       @status = val
     end
 
@@ -109,6 +113,17 @@ module EEML
 
     # The email address of the feed creator
     attr_accessor :email
+
+    # The location of the feed
+    attr_reader :location
+
+    # Set the location of the feed - loc must be an EEML::Location object
+    def location=(loc)
+      unless loc.is_a?(EEML::Location)
+        raise TypeError.new('loc must be an EEML::Location') 
+      end
+      @location = loc
+    end
 
   end
 
