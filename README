@@ -19,8 +19,9 @@ Homepage: http://github.com/Floppy/eeml-ruby
 
 == STATUS
 
-The code can current create and parse EEML at a level equivalent to the
-"minimal" EEML example at http://eeml.org/xml/005/minimal.xml.
+The code can current create EEML at a level equivalent to the
+"complete" EEML example at http://eeml.org/xml/005/complete.xml, and parse the
+"minimal" level at http://eeml.org/xml/005/minimal.xml
 
 To parse EEML: call EEML::Environment#from_eeml(your_eeml_string), and you will
 get back an EEML::Environment object containing a number of EEML::Data objects.
@@ -32,4 +33,4 @@ objects to it, and call EEML::Environment#to_eeml.
 
 The file examples/simple_server.rb contains a simple WEBrick server which serves
 an EEML document. This allows a site like Pachube (http://www.pachube.com) to
-get EEML data from your system.
+fetch EEML data from your system.
