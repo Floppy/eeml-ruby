@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
-  s.name = "eeml"
-  s.version = "0.1.0"
-  s.date = "2008-08-27"
+  s.name = "eeml-simple"
+  s.version = "0.1.1"
+  s.date = "2008-11-15"
   s.summary = "A Ruby wrapper around the Extended Environments Markup Language"
   s.email = "james@floppy.org.uk"
   s.homepage = "http://github.com/Floppy/eeml-ruby"
@@ -10,4 +10,5 @@ Gem::Specification.new do |s|
   s.files = ["README", "COPYING"]
   s.files += ["lib/eeml.rb", "lib/eeml/environment.rb", "lib/eeml/data.rb", "lib/eeml/exceptions.rb", "lib/eeml/location.rb", "lib/eeml/unit.rb"]
   s.files += ["examples/simple_server.rb"]
+  s.add_dependency('builder', [">= 2.1.2"])
 end
