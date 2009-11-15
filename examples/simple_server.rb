@@ -10,7 +10,7 @@ require 'eeml'
 $environment = EEML::Environment.new
 
 # Set dummy data in environment object
-$environment << EEML::Data.new(42)
+$environment << EEML::Data.new(42, :id => "ABC123")
 
 # Create WEBrick server
 s = WEBrick::HTTPServer.new( :Port => 50000 )
