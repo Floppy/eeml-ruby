@@ -69,7 +69,7 @@ module EEML
               end
             end
             @data_items.each_index do |i|
-              env.data(:id => i) do |data|
+              env.data(:id => @data_items[i].id || i) do |data|
                 @data_items[i].tags.each do |tag|
                   data.tag tag
                 end

@@ -5,13 +5,17 @@ module EEML
   class Data
 
     # Create a new EEML::Data item.
-    def initialize(value)
+    def initialize(value, options = {})
       @value = value
+      @id = options[:id]
       @tags = []
     end
 
     # Data value
     attr_accessor :value
+
+    # Data value
+    attr_accessor :id
 
     # Tag array
     attr_accessor :tags
