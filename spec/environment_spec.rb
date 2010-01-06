@@ -174,7 +174,7 @@ describe EEML::Environment do
   describe "being created from XML" do
     
     it "parses the 'minimal' EEML example document" do
-      eeml = '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
+      eeml = '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><environment><data id="0"><value>36.2</value></data></environment></eeml>'
       env = EEML::Environment.from_eeml(eeml)
       env.size.should be(1)
       env[0].value.should be_close(36.2, 1e-9)
@@ -221,9 +221,30 @@ describe EEML::Environment do
     end
 
     it "generates the 'complete' EEML example document" do
-      @env.to_eeml(5).should == '<?xml version="1.0" encoding="UTF-8"?><eeml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd" version="5"><environment updated="2007-05-04T18:13:51Z" creator="http://www.haque.co.uk" id="1"><title>A Room Somewhere</title><feed>http://www.pachube.com/feeds/1.xml</feed><status>frozen</status><description>This is a room somewhere</description><icon>http://www.roomsomewhere/icon.png</icon><website>http://www.roomsomewhere/</website><email>myemail@roomsomewhere</email><location disposition="fixed" domain="physical" exposure="indoor"><name>My Room</name><lat>32.4</lat><lon>22.7</lon><ele>0.2</ele></location><data id="0"><tag>temperature</tag><value maxValue="48.0" minValue="23.0">36.2</value><unit type="derivedSI" symbol="C">Celsius</unit></data><data id="1"><tag>blush</tag><tag>redness</tag><tag>embarrassment</tag><value maxValue="100.0" minValue="0.0">84.0</value><unit type="contextDependentUnits">blushesPerHour</unit></data><data id="2"><tag>length</tag><tag>distance</tag><tag>extension</tag><value minValue="0.0">12.3</value><unit type="basicSI" symbol="m">meter</unit></data></environment></eeml>'
+      @env.to_eeml(5).should == '<?xml version="1.0" encoding="UTF-8"?><eeml version="5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.eeml.org/xsd/005" xsi:schemaLocation="http://www.eeml.org/xsd/005 http://www.eeml.org/xsd/005/005.xsd"><environment updated="2007-05-04T18:13:51Z" creator="http://www.haque.co.uk" id="1"><title>A Room Somewhere</title><feed>http://www.pachube.com/feeds/1.xml</feed><status>frozen</status><description>This is a room somewhere</description><icon>http://www.roomsomewhere/icon.png</icon><website>http://www.roomsomewhere/</website><email>myemail@roomsomewhere</email><location domain="physical" exposure="indoor" disposition="fixed"><name>My Room</name><lat>32.4</lat><lon>22.7</lon><ele>0.2</ele></location><data id="0"><tag>temperature</tag><value maxValue="48.0" minValue="23.0">36.2</value><unit type="derivedSI" symbol="C">Celsius</unit></data><data id="1"><tag>blush</tag><tag>redness</tag><tag>embarrassment</tag><value maxValue="100.0" minValue="0.0">84.0</value><unit type="contextDependentUnits">blushesPerHour</unit></data><data id="2"><tag>length</tag><tag>distance</tag><tag>extension</tag><value minValue="0.0">12.3</value><unit type="basicSI" symbol="m">meter</unit></data></environment></eeml>'
+    end
+    
+    it "populates the 'complete' EEML::Environment object from EEML XML" do
+      @eeml = EEML::Environment.from_eeml(@env.to_eeml())
+      @eeml.title.should == "A Room Somewhere"
+      @eeml.creator.should == "http://www.haque.co.uk"
+      @eeml.id.should == "1"
+      @eeml.updated_at.should == Time.parse("2007-05-04T18:13:51Z")
+      @eeml.description.should == "This is a room somewhere"
     end
 
+    it "populates the EEML::Location object from EEML XML" do
+      @eeml = EEML::Environment.from_eeml(@env.to_eeml())
+      @eeml.location.class.name.should == "EEML::Location"
+      @eeml.location.name.should == "My Room"
+      @eeml.location.disposition == "fixed"
+    end
+    
+    it "populates the EEML::Data object from EEML XML" do
+      @eeml = EEML::Environment.from_eeml(@env.to_eeml())
+      @eeml[0].tags[0].should == "temperature"
+      @eeml[0].value.should == 36.2
+    end
   end
 
 end

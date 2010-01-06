@@ -22,7 +22,78 @@ module EEML
       env = Environment.new
       # Read data items
       REXML::XPath.each(doc, "/eeml/environment/data") do |node|
-        env << EEML::Data.new(node.elements['value'].text.to_f)
+        data = EEML::Data.new(node.elements['value'].text.to_f)
+        # Read data tags
+        REXML::XPath.each(node, "tag") do |tag|
+          text = tag.text if(tag.text) 
+          data.tags << text
+        end
+        data.max_value = node.elements["value"].attributes["maxValue"] if(node.elements["value"].attributes["maxValue"]) 
+        data.min_value = node.elements["value"].attributes["minValue"] if(node.elements["value"].attributes["minValue"])
+        # Load tags into data object
+        env << data
+ 
+      end
+      # Parse attributes
+      # Read creator
+      env.creator = doc.root.elements["environment"].attributes["creator"] if(doc.root.elements["environment"].attributes["creator"])
+      # Read id
+      env.id = doc.root.elements["environment"].attributes["id"] if(doc.root.elements["environment"].attributes["creator"])
+
+      # Read created
+      env.updated_at = Time.parse(doc.root.elements["environment"].attributes["updated"]) if(doc.root.elements["environment"].attributes["updated"])
+
+      # Parse environment elements
+      # Read title
+      
+      env.title = doc.root.elements["//title"].text if(doc.root.elements["//title"])
+
+      # Read description
+      env.description = doc.root.elements["//description"].text if(doc.root.elements["//description"])
+
+      # Read email
+      env.email = doc.root.elements["//email"].text if(doc.root.elements["//email"])
+
+      # Read feed
+      env.feed = doc.root.elements["//feed"].text if(doc.root.elements["//feed"])
+
+      # Read icon
+      env.icon = doc.root.elements["//icon"].text if(doc.root.elements["//icon"])
+       
+      # Read website
+      env.website = doc.root.elements["//website"].text if(doc.root.elements["//website"])
+    
+      # Get the location element
+      if (doc.root.elements["///location"])
+        l_element = doc.root.elements["///location"]
+        # Get the domain - :physical or :virtual
+        if(l_element.attributes["domain"] == "physical")
+          loc = EEML::Location.new(:physical)
+        else 
+          loc = EEML::Location.new(:virtual)
+        end
+        
+        # Get the exposure - :indoor or :outdoor
+        if(l_element.attributes["exposure"] == "indoor")  
+          loc.exposure = :indoor
+        else
+          loc.exposure = :outdoor
+        end
+        
+        # Get the disposition - :fixed or :mobile
+        if(l_element.attributes["disposition"] == "mobile")
+          loc.disposition = :mobile
+        else
+          loc.disposition = :fixed
+        end
+      
+      # Get the location elements
+        loc.name = doc.root.elements["///name"].text
+        loc.lat = doc.root.elements["///lat"].text.to_i
+        loc.lon = doc.root.elements["///lon"].text.to_i
+        loc.ele = doc.root.elements["///ele"].text.to_f
+        
+        env.location = loc 
       end
       # Done
       return env
