@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "eeml-simple"
-  s.version = "0.1.1"
-  s.date = "2008-11-15"
+  s.version = "0.2.0"
+  s.date = "2010-01-10"
   s.summary = "A Ruby wrapper around the Extended Environments Markup Language"
   s.email = "james@floppy.org.uk"
   s.homepage = "http://github.com/Floppy/eeml-ruby"
